@@ -1,6 +1,9 @@
 export type ResolverContext = {
   user: {
     id: number;
+    username: string;
+    email: string;
+    createdAt: Date;
   };
 };
 

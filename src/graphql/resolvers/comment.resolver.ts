@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/index.js";
 import type { CreateCommentInput, FindByUserArgs, ResolverContext } from "../types.js";
+import { GraphQLError } from "graphql";
 
 export const commentResolvers = {
   Query: {
@@ -73,7 +74,11 @@ export const commentResolvers = {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           switch (e.code) {
             case "P2025": // Not found
-              throw new Error("Comment does not exist");
+              throw new GraphQLError("Comment does not exist", {
+                extensions: {
+                  code: "NOT_FOUND",
+                },
+              });
           }
         }
         throw e;

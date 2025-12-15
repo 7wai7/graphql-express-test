@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { prisma } from "../../prisma/index.js";
 import type { CreateUserInput } from "../types.js";
 import bcrypt from "bcrypt";
@@ -28,7 +29,12 @@ export const userResolvers = {
         },
       });
 
-      if (existedUser) throw new Error("This user already exists");
+      if (existedUser)
+        throw new GraphQLError("This user already exists", {
+          extensions: {
+            code: "CONFLICT",
+          },
+        });
 
       const hash = await bcrypt.hash(input.password, 5);
 

@@ -5,6 +5,7 @@ import type {
   FindByUserArgs,
   ResolverContext,
 } from "../types.js";
+import { GraphQLError } from "graphql";
 
 export const postResolvers = {
   Query: {
@@ -58,7 +59,11 @@ export const postResolvers = {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           switch (e.code) {
             case "P2025": // Not found
-              throw new Error("Post does not exist");
+              throw new GraphQLError("Post does not exist", {
+                extensions: {
+                  code: "NOT_FOUND",
+                },
+              });
           }
         }
         throw e;
