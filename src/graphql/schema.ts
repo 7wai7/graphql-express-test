@@ -6,19 +6,18 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addUser(input: AddUserInput!): User!
+    createUser(input: AddUserInput!): User!
   }
 
   type User {
     id: ID!
-    name: String!
+    username: String!
     email: String!
-    role: String!
   }
 
   input AddUserInput {
-    name: String!
+    username: String!
     email: String!
-    role: String!
+    password: String!
   }
 `;
