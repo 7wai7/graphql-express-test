@@ -1,5 +1,21 @@
-export type AddUserInput = {
+export type CreateUserInput = {
   username: string;
   email: string;
-  password: string
+  password: string;
+};
+
+export type CreatePostInput = {
+  content: string;
+  userId: number;
+};
+
+export type CreateCommentInput = {
+  content: string;
+  userId: number;
+  postId: number;
+};
+
+export type FindByUserArgs = {
+  id?: number;
+  username?: string;
 };

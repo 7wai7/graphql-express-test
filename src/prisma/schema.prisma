@@ -8,8 +8,36 @@ datasource db {
 
 model User {
   id            Int      @id @default(autoincrement())
-  username      String   @unique @db.VarChar(255)
+  username      String   @unique
   email         String   @unique
   hash_password String
   createdAt     DateTime @default(now())
+
+  posts    Post[]
+  comments Comment[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId Int?
+
+  comments Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId Int?
+
+  post   Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int?
 }
