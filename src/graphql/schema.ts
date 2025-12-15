@@ -14,6 +14,8 @@ export const typeDefs = gql`
     createUser(input: CreateUserInput!): User!
     createPost(input: CreatePostInput!): Post!
     createComment(input: CreateCommentInput!): Comment!
+    deletePost(id: Int!): Post!
+    deleteComment(id: Int!): Comment!
   }
 
   type User {

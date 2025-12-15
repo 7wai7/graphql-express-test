@@ -1,3 +1,9 @@
+export type ResolverContext = {
+  user: {
+    id: number;
+  };
+};
+
 export type CreateUserInput = {
   username: string;
   email: string;
