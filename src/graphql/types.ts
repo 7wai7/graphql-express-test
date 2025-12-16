@@ -1,3 +1,13 @@
+export type Resolver<TArgs = any, TResult = any> = (
+  parent: unknown,
+  args: TArgs,
+  ctx: ResolverContext
+) => Promise<TResult> | TResult;
+
+export type Middleware<TArgs = any> = (
+  resolver: Resolver<TArgs>
+) => Resolver<TArgs>;
+
 export type ResolverContext = {
   user: {
     id: number;
@@ -15,12 +25,10 @@ export type CreateUserInput = {
 
 export type CreatePostInput = {
   content: string;
-  userId: number;
 };
 
 export type CreateCommentInput = {
   content: string;
-  userId: number;
   postId: number;
 };
 

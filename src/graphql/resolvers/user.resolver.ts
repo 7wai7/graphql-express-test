@@ -5,7 +5,10 @@ import bcrypt from "bcrypt";
 
 export const userResolvers = {
   Query: {
-    users: async () => await prisma.user.findMany(),
+    users: async () =>
+      await prisma.user.findMany({
+        select: { id: true, username: true, email: true, createdAt: true },
+      }),
   },
 
   Mutation: {

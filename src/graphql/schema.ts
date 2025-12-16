@@ -22,6 +22,7 @@ export const typeDefs = gql`
     id: ID!
     username: String!
     email: String!
+    createdAt: Date!
 
     posts: [Post]
     comments: [Comment]
@@ -59,12 +60,10 @@ export const typeDefs = gql`
   }
 
   input CreatePostInput {
-    userId: Int!
     content: String!
   }
 
   input CreateCommentInput {
-    userId: Int!
     postId: Int!
     content: String!
   }

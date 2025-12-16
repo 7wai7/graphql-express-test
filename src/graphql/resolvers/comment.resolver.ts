@@ -1,7 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/index.js";
-import type { CreateCommentInput, FindByUserArgs, ResolverContext } from "../types.js";
-import { GraphQLError } from "graphql";
+import type {
+  CreateCommentInput,
+  FindByUserArgs,
+  ResolverContext,
+} from "../types.js";
+import { errors } from "../utils/errors.util.js";
 
 export const commentResolvers = {
   Query: {
@@ -37,10 +41,13 @@ export const commentResolvers = {
   Mutation: {
     createComment: async (
       _: unknown,
-      { input }: { input: CreateCommentInput }
+      { input }: { input: CreateCommentInput },
+      ctx: ResolverContext
     ) => {
+      const userId = ctx.user.id;
+
       const post = await prisma.comment.create({
-        data: input,
+        data: { ...input, userId },
       });
 
       return await prisma.comment.findUnique({
@@ -74,11 +81,7 @@ export const commentResolvers = {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           switch (e.code) {
             case "P2025": // Not found
-              throw new GraphQLError("Comment does not exist", {
-                extensions: {
-                  code: "NOT_FOUND",
-                },
-              });
+              throw errors.notFound("Comment does not exist");
           }
         }
         throw e;
