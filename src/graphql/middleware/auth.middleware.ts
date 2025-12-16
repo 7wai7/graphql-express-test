@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../../prisma/index.js";
 import type { Middleware } from "../types.js";
 import { errors } from "../utils/errors.util.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 // isHardGuard === false -- leave access to unauthorized users but with reduced functionality
 export const auth = (isHardGuard = true): Middleware => {
