@@ -15,7 +15,7 @@ export const createGraphQLServer = async (app: Application) => {
   app.use(
     "/graphql",
     expressMiddleware(server, {
-      context: async (): Promise<any> => {},
+      context: async ({ req, res }): Promise<any> => ({req, res}),
     })
   );
 };

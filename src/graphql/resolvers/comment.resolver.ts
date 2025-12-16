@@ -1,3 +1,4 @@
+import { auth } from "../middleware/auth.middleware.js";
 import { requireAuth } from "../middleware/requireAuth.middleware.js";
 import { withMiddlewares } from "../middleware/withMiddlewares.js";
 import { CommentService } from "../services/comment.service.js";
@@ -18,18 +19,20 @@ export const commentResolvers = {
 
   Mutation: {
     createComment: withMiddlewares(
+      auth,
       requireAuth,
       async (
         _: unknown,
         { input }: { input: CreateCommentInput },
         ctx: ResolverContext
-      ) => CommentService.create({ ...input, userId: ctx.user.id })
+      ) => CommentService.create({ ...input, userId: ctx.user!.id })
     ),
 
     deleteComment: withMiddlewares(
+      auth,
       requireAuth,
       async (_: unknown, { id }: { id: number }, ctx: ResolverContext) =>
-        CommentService.delete(id, ctx.user.id)
+        CommentService.delete(id, ctx.user!.id)
     ),
   },
 };

@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 export type Resolver<TArgs = any, TResult = any> = (
   parent: unknown,
   args: TArgs,
@@ -9,12 +11,25 @@ export type Middleware<TArgs = any> = (
 ) => Resolver<TArgs>;
 
 export type ResolverContext = {
+  req: Request;
+  res: Response;
   user: {
     id: number;
     username: string;
     email: string;
     createdAt: Date;
-  };
+  } | null;
+};
+
+export type JwtUserPayload = {
+  id: number;
+  username: string;
+  email: string;
+};
+
+export type LoginInput = {
+  username: string;
+  password: string;
 };
 
 export type CreateUserInput = {

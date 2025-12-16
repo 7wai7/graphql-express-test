@@ -11,6 +11,9 @@ export const typeDefs = gql`
   }
 
   type Mutation {
+    register(input: RegisterInput!): User!
+    login(input: LoginInput!): User!
+    logout: Boolean!
     createUser(input: CreateUserInput!): User!
     createPost(input: CreatePostInput!): Post!
     createComment(input: CreateCommentInput!): Comment!
@@ -48,9 +51,15 @@ export const typeDefs = gql`
     post: Post
   }
 
-  input FindByUserArgs {
-    id: Int
-    username: String
+  input RegisterInput {
+    username: String!
+    email: String!
+    password: String!
+  }
+
+  input LoginInput {
+    username: String!
+    password: String!
   }
 
   input CreateUserInput {
@@ -66,5 +75,10 @@ export const typeDefs = gql`
   input CreateCommentInput {
     postId: Int!
     content: String!
+  }
+
+  input FindByUserArgs {
+    id: Int
+    username: String
   }
 `;

@@ -18,7 +18,18 @@ export class UserService {
     email: string;
     password: string;
   }) {
-    const existedUser = await prisma.user.findFirst({
+    const existedUser = await this.existedUser(username, email);
+    if (existedUser) throw errors.conflict("This user already exists");
+ 
+    const hash = await bcrypt.hash(password, 5);
+
+    return await prisma.user.create({
+      data: { username, email, hash_password: hash },
+    });
+  }
+
+  static async existedUser(username: string, email: string) {
+    return await prisma.user.findFirst({
       where: {
         OR: [
           {
@@ -30,19 +41,10 @@ export class UserService {
           {
             username: {
               contains: username,
-              mode: "insensitive",
             },
           },
         ],
       },
-    });
-
-    if (existedUser) throw errors.conflict("This user already exists");
-
-    const hash = await bcrypt.hash(password, 5);
-
-    return await prisma.user.create({
-      data: { username, email, hash_password: hash },
     });
   }
 }

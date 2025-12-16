@@ -1,3 +1,4 @@
+import { auth } from "../middleware/auth.middleware.js";
 import { requireAuth } from "../middleware/requireAuth.middleware.js";
 import { withMiddlewares } from "../middleware/withMiddlewares.js";
 import { PostService } from "../services/post.service.js";
@@ -15,18 +16,20 @@ export const postResolvers = {
 
   Mutation: {
     createPost: withMiddlewares(
+      auth,
       requireAuth,
       async (
         _: unknown,
         { input }: { input: CreatePostInput },
         ctx: ResolverContext
-      ) => PostService.create({ ...input, userId: ctx.user.id })
+      ) => PostService.create({ ...input, userId: ctx.user!.id })
     ),
 
     deletePost: withMiddlewares(
+      auth,
       requireAuth,
       async (_: unknown, { id }: { id: number }, ctx: ResolverContext) =>
-        PostService.delete(id, ctx.user.id)
+        PostService.delete(id, ctx.user!.id)
     ),
   },
 };
