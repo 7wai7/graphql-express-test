@@ -3,7 +3,7 @@ import { prisma } from "../../prisma/index.js";
 import { errors } from "../utils/errors.util.js";
 
 export class PostService {
-  static async postsByUser({
+  static async findByUser({
     id,
     username,
   }: {
@@ -21,7 +21,7 @@ export class PostService {
     });
   }
 
-  static async createPost(input: Prisma.PostUncheckedCreateInput) {
+  static async create(input: Prisma.PostUncheckedCreateInput) {
     const post = await prisma.post.create({
       data: { ...input },
     });
@@ -35,7 +35,7 @@ export class PostService {
     });
   }
 
-  static async deletePost(id: number, userId: number) {
+  static async delete(id: number, userId: number) {
     try {
       return await prisma.post.delete({
         where: {

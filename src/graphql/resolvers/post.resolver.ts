@@ -10,7 +10,7 @@ import type {
 export const postResolvers = {
   Query: {
     postsByUser: async (_: unknown, { input }: { input: FindByUserArgs }) =>
-      PostService.postsByUser(input),
+      PostService.findByUser(input),
   },
 
   Mutation: {
@@ -20,13 +20,13 @@ export const postResolvers = {
         _: unknown,
         { input }: { input: CreatePostInput },
         ctx: ResolverContext
-      ) => PostService.createPost({ ...input, userId: ctx.user.id })
+      ) => PostService.create({ ...input, userId: ctx.user.id })
     ),
 
     deletePost: withMiddlewares(
       requireAuth,
       async (_: unknown, { id }: { id: number }, ctx: ResolverContext) =>
-        PostService.deletePost(id, ctx.user.id)
+        PostService.delete(id, ctx.user.id)
     ),
   },
 };

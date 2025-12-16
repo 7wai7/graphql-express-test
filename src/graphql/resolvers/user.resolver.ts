@@ -3,10 +3,10 @@ import type { CreateUserInput } from "../types.js";
 
 export const userResolvers = {
   Query: {
-    users: UserService.getUsers,
+    users: UserService.getAll,
   },
 
   Mutation: {
-    createUser: async (_: unknown, { input }: { input: CreateUserInput }) => UserService.creteUser(input),
+    createUser: async (_: unknown, { input }: { input: CreateUserInput }) => UserService.create(input),
   },
 };

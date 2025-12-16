@@ -3,13 +3,13 @@ import { errors } from "../utils/errors.util.js";
 import bcrypt from "bcrypt";
 
 export class UserService {
-  static async getUsers() {
+  static async getAll() {
     return await prisma.user.findMany({
       select: { id: true, username: true, email: true, createdAt: true },
     });
   }
 
-  static async creteUser({
+  static async create({
     username,
     email,
     password,
