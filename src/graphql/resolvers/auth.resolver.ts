@@ -1,6 +1,5 @@
-import jwt from "jsonwebtoken";
+import jwt, { type SignOptions } from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
 import type { Response } from "express";
 import { prisma } from "../../prisma/index.js";
 import { UserService } from "../services/user.service.js";
@@ -11,11 +10,7 @@ import type {
   LoginInput,
   ResolverContext,
 } from "../types.js";
-dotenv.config();
-
-const JWT_EXPIRES_IN = "7d";
-const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
-if (!process.env.JWT_SECRET) console.error("JWT_SECRET is not defined")
+import { env } from "../../config/index.js";
 
 export const authResolvers = {
   Mutation: {
@@ -77,7 +72,7 @@ export const authResolvers = {
       res.clearCookie("token", {
         httpOnly: true,
         sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
+        secure: env.NODE_ENV === "production",
       });
 
       return true;
@@ -86,23 +81,30 @@ export const authResolvers = {
 };
 
 function signToken<T extends JwtUserPayload>(user: T) {
+  const options: SignOptions = {};
+
+  if (env.JWT_EXPIRES_IN) {
+    options.expiresIn = env.JWT_EXPIRES_IN as Exclude<
+      SignOptions["expiresIn"],
+      undefined
+    >;
+  }
+
   return jwt.sign(
     {
       id: user.id,
       username: user.username,
       email: user.email,
     },
-    JWT_SECRET,
-    {
-      expiresIn: JWT_EXPIRES_IN,
-    }
+    env.JWT_SECRET,
+    options
   );
 }
 
 function saveCookieToken(res: Response, token: string) {
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
     sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });

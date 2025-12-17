@@ -1,13 +1,11 @@
 import express from "express";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middleware/error.middleware.js";
 import { createGraphQLServer } from "./graphql/index.js";
-
-dotenv.config();
+import { env } from "./config/index.js";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = env.PORT || 4000;
 
 app.use(express.json());
 app.use(cookieParser());

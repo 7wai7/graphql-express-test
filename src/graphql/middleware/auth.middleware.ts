@@ -2,11 +2,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../../prisma/index.js";
 import type { Middleware } from "../types.js";
 import { errors } from "../utils/errors.util.js";
-import dotenv from "dotenv";
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
-if (!process.env.JWT_SECRET) console.error("JWT_SECRET is not defined")
+import { env } from "../../config/index.js";
 
 // isHardGuard === false -- leave access to unauthorized users but with reduced functionality
 export const auth = (isHardGuard = true): Middleware => {
@@ -20,7 +16,7 @@ export const auth = (isHardGuard = true): Middleware => {
 
       let decoded: any;
       try {
-        decoded = jwt.verify(token, JWT_SECRET);
+        decoded = jwt.verify(token, env.JWT_SECRET);
       } catch {
         if (isHardGuard) throw errors.unauthenticated();
         return next(parent, args, ctx);
