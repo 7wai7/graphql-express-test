@@ -10,7 +10,11 @@ import type {
 export const postResolvers = {
   Query: {
     postsByUser: async (_: unknown, { input }: { input: FindByUserArgs }) =>
-      PostService.findByUser(input),
+      PostService.findMany({
+        where: {
+          user: input,
+        },
+      }),
   },
 
   Mutation: {

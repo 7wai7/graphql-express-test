@@ -11,7 +11,7 @@ export const errors = {
     new GraphQLError(msg, { extensions: { code: "NOT_FOUND" } }),
   conflict: (msg = "Conflict") =>
     new GraphQLError(msg, { extensions: { code: "CONFLICT" } }),
-  serverError: (msg = "Server error") =>
+  internal: (msg = "Server error") =>
     new GraphQLError(msg, { extensions: { code: "INTERNAL_SERVER_ERROR" } }),
 };
 

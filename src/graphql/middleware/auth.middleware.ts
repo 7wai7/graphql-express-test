@@ -5,6 +5,9 @@ import { errors } from "../utils/errors.util.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
+if (!process.env.JWT_SECRET) console.error("JWT_SECRET is not defined")
+
 // isHardGuard === false -- leave access to unauthorized users but with reduced functionality
 export const auth = (isHardGuard = true): Middleware => {
   return (next) => {
@@ -17,7 +20,7 @@ export const auth = (isHardGuard = true): Middleware => {
 
       let decoded: any;
       try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET!);
+        decoded = jwt.verify(token, JWT_SECRET);
       } catch {
         if (isHardGuard) throw errors.unauthenticated();
         return next(parent, args, ctx);

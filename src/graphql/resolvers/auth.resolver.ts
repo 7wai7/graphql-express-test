@@ -14,6 +14,8 @@ import type {
 dotenv.config();
 
 const JWT_EXPIRES_IN = "7d";
+const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
+if (!process.env.JWT_SECRET) console.error("JWT_SECRET is not defined")
 
 export const authResolvers = {
   Mutation: {
@@ -84,16 +86,13 @@ export const authResolvers = {
 };
 
 function signToken<T extends JwtUserPayload>(user: T) {
-  if (!process.env.JWT_SECRET)
-    throw errors.serverError("JWT_SECRET is not defined");
-
   return jwt.sign(
     {
       id: user.id,
       username: user.username,
       email: user.email,
     },
-    process.env.JWT_SECRET,
+    JWT_SECRET,
     {
       expiresIn: JWT_EXPIRES_IN,
     }

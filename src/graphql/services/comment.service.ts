@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/index.js";
 import type { FindByUserArgs } from "../types.js";
-import { errors } from "../utils/errors.util.js";
+import { mapPrismaError } from "../utils/prisma-error.mapper.js";
 
 export class CommentService {
   static async findByPost(postId: number) {
@@ -56,13 +56,7 @@ export class CommentService {
         },
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        switch (e.code) {
-          case "P2025": // Not found
-            throw errors.notFound("Comment does not exist");
-        }
-      }
-      throw e;
+      mapPrismaError(e);
     }
   }
 }

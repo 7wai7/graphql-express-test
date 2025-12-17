@@ -8,6 +8,16 @@ export const createGraphQLServer = async (app: Application) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    formatError: (formattedError) => {
+      console.error(formattedError);
+
+      return {
+        message: formattedError.message,
+        extensions: {
+          code: formattedError.extensions?.code,
+        },
+      };
+    },
   });
 
   await server.start();
@@ -15,7 +25,7 @@ export const createGraphQLServer = async (app: Application) => {
   app.use(
     "/graphql",
     expressMiddleware(server, {
-      context: async ({ req, res }): Promise<any> => ({req, res}),
+      context: async ({ req, res }): Promise<any> => ({ req, res }),
     })
   );
 };

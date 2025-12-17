@@ -1,22 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/index.js";
-import { errors } from "../utils/errors.util.js";
+import { mapPrismaError } from "../utils/prisma-error.mapper.js";
 
 export class PostService {
-  static async findByUser({
-    id,
-    username,
-  }: {
-    id?: number;
-    username?: string;
-  }) {
-    const where: any = {};
-
-    if (id) where.userId = id;
-    if (username) where.user = { username: username };
-
+  static async findMany(options: Prisma.PostFindManyArgs) {
     return await prisma.post.findMany({
-      where,
+      ...options,
       include: { user: true, comments: { include: { user: true } } },
     });
   }
@@ -48,13 +37,7 @@ export class PostService {
         },
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        switch (e.code) {
-          case "P2025": // Not found
-            throw errors.notFound("Post does not exist");
-        }
-      }
-      throw e;
+      mapPrismaError(e);
     }
   }
 }
